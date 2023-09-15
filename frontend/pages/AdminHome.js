@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { ListItem, Button, Dialog, DialogHeader, DialogContent, DialogActions, Text, Provider, TextInput } from "@react-native-material/core"
-import { Alert, StyleSheet, View } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 import { ip } from "../config";
 import axios from "axios";
+import { SelectList } from "react-native-dropdown-select-list";
 
 export default function AdminHome({ navigation, route }) {
     const { user } = route.params;
@@ -23,6 +24,12 @@ export default function AdminHome({ navigation, route }) {
         setSelectedUser(user.username);
         setSelectedRole(user.role)
     }
+
+    // Limit the role choosing to user,admin
+    const [items, _] = useState([
+        { key: 'User', value: 'user' },
+        { key: 'Admin', value: 'admin' }
+    ]);
 
     const getUsers = async () => {
         try {
@@ -57,10 +64,15 @@ export default function AdminHome({ navigation, route }) {
             <Dialog visible={createUser} onDismiss={() => showCreateUser(false)}>
                 <DialogHeader title="Create a new user" />
                 <DialogContent>
-                    <Text>Insert the credentials for the new user</Text>
                     <TextInput style={{ marginBottom: 10 }} variant="outlined" label="username" value={newUsername} onChangeText={text => setNewUsername(text)} />
                     <TextInput style={{ marginBottom: 10 }} variant="outlined" label="password" value={newPassword} onChangeText={text => setNewPassword(text)} />
-                    <TextInput style={{ marginBottom: 10 }} variant="outlined" label="role" value={newRole} onChangeText={text => setNewRole(text)} />
+                    <SelectList
+                        placeholder="User role"
+                        save="value"
+                        data={items}
+                        search={false}
+                        setSelected={setNewRole}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button
@@ -97,7 +109,14 @@ export default function AdminHome({ navigation, route }) {
             <Dialog visible={editUser} onDismiss={() => showEditUser(false)}>
                 <DialogHeader title={`Edit role for ${selectedUser}`} />
                 <DialogContent>
-                    <TextInput style={{ marginBottom: 10 }} variant="outlined" label="role" value={selectedRole} onChangeText={text => setSelectedRole(text)} />
+                    <SelectList
+                        placeholder="User role"
+                        save="value"
+                        data={items}
+                        search={false}
+                        defaultOption={selectedRole}
+                        setSelected={setSelectedRole}
+                    />
                 </DialogContent>
                 <DialogActions>
                     <Button
