@@ -18,7 +18,6 @@ export default function Login({ navigation, route }) {
             setUsername("");
             setPassword("");
         } catch (error) {
-            console.log(error);
             Alert.alert("Error logging in.")
         }
 

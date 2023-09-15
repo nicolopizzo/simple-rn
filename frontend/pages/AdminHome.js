@@ -27,15 +27,13 @@ export default function AdminHome({ navigation, route }) {
     const getUsers = async () => {
         try {
 
-            const url = `http://${ip}:8080/`
+            const url = `http://${ip}:8080/?username=${username}`
 
             const response = await axios.get(url);
-            console.log(response);
             if (response.data != undefined) {
                 setUsers(response.data);
             }
         } catch (error) {
-            console.error(error);
             Alert.alert("Something went wrong in retreiving users.")
         }
     }
@@ -55,7 +53,6 @@ export default function AdminHome({ navigation, route }) {
             </>
 
             <Button style={{ margin: 16 }} title="Create new user" onPress={() => { showCreateUser(true) }} />
-            {/* // </View> */}
 
             <Dialog visible={createUser} onDismiss={() => showCreateUser(false)}>
                 <DialogHeader title="Create a new user" />
@@ -86,6 +83,7 @@ export default function AdminHome({ navigation, route }) {
                             const newUser = { username: newUsername, password: newPassword, role: newRole }
                             axios.put(url, newUser)
                             setUsers([...users, newUser])
+
                             setNewUsername("")
                             setNewPassword("")
                             setNewRole("")
@@ -116,10 +114,9 @@ export default function AdminHome({ navigation, route }) {
                         variant="text"
                         onPress={() => {
                             const url = `http://${ip}:8080/role?username=${selectedUser}&role=${selectedRole}`
-                            console.log(url);
-                            axios.post(url)
+                            axios.patch(url)
                             let newUsers = users;
-                            let i = newUsers.findIndex((u) => u.username == selectedUser)
+                            const i = newUsers.findIndex((u) => u.username == selectedUser)
                             newUsers[i].role = selectedRole
                             setUsers(newUsers)
 

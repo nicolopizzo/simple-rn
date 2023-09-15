@@ -12,7 +12,7 @@ export default function UserHome({ navigation, route }) {
     const onAddNewInterest = () => {
         setInterests([...interests, newInterest]);
         const url = `http://${ip}:8080/interests?username=${username}&interest=${newInterest}`
-        axios.post(url);
+        axios.patch(url);
 
         setNewInterest("");
     }

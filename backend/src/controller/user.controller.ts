@@ -6,9 +6,18 @@ const router = Router();
 const userRepository = AppDataSource.getRepository(User);
 
 router.get("/", async (req: Request, res: Response) => {
+    const username = req.query.username as string | undefined
+
     const users = await userRepository.find();
     if (users == undefined) {
         return res.status(400).send({ error: "Error encountered." })
+    }
+
+    // Exclude current user
+    if (username != undefined) {
+        const k = users.findIndex(u => u.username == username)
+        const newUsers = users.splice(0, k).concat(users.splice(k + 1))
+        return res.status(200).send(newUsers)
     }
 
     return res.status(200).send(users)
@@ -40,7 +49,7 @@ router.put("/", async (req: Request, res: Response) => {
     }
 })
 
-router.post("/role", async (req: Request, res: Response) => {
+router.patch("/role", async (req: Request, res: Response) => {
     const username = req.query.username as string;
     const role = req.query.role as string;
 
@@ -55,7 +64,7 @@ router.post("/role", async (req: Request, res: Response) => {
     return res.status(200).send(user);
 })
 
-router.post("/interests", async (req: Request, res: Response) => {
+router.patch("/interests", async (req: Request, res: Response) => {
     const username = req.query.username as string;
     const interest = req.query.interest as string;
 
