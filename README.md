@@ -1,0 +1,3 @@
+# Simple rn
+Sample application to test React Native. You can find a simple server in the directory `backend`, and the mobile app in the directory `frontend`.
+To have the application fully functional, install the dependencies executing the command `npm install` in both directories and set the IP address of your machine in the file `frontend/config.js`, otherwise the mobile app cannot communicate with the server.
